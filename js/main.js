@@ -169,16 +169,32 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('theme-toggle').checked = true;
   }
   
-  // 主题切换处理 - 添加淡入淡出动画
+  // 主题切换处理 - 添加Fluent风格的过渡动画
   const themeToggle = document.getElementById('theme-toggle');
   
   themeToggle.addEventListener('change', () => {
     // 添加过渡类以实现平滑主题切换
     document.body.classList.add('theme-transition');
     
-    // 添加淡入淡出效果
-    document.body.style.opacity = '0.92';
+    // 添加Fluent风格的淡入淡出效果
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.backgroundColor = themeToggle.checked ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)';
+    overlay.style.zIndex = '9999';
+    overlay.style.opacity = '0';
+    overlay.style.transition = 'opacity 0.3s ease';
+    document.body.appendChild(overlay);
     
+    // 执行淡入
+    setTimeout(() => {
+      overlay.style.opacity = '1';
+    }, 10);
+    
+    // 延迟切换主题
     setTimeout(() => {
       if (themeToggle.checked) {
         document.documentElement.setAttribute('data-theme', 'dark');
@@ -193,17 +209,25 @@ document.addEventListener('DOMContentLoaded', () => {
         navigator.vibrate(10);
       }
       
-      // 恢复透明度
-      document.body.style.opacity = '1';
-    }, 50);
+      // 淡出并移除遮罩
+      setTimeout(() => {
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+          document.body.removeChild(overlay);
+        }, 300);
+      }, 100);
+    }, 150);
   });
 
+  // Fluent设计的标签指示器
   const tabIndicator = document.querySelector('.tab-indicator');
   const updateIndicator = (activeTab) => {
     const tabRect = activeTab.getBoundingClientRect();
     const navRect = document.querySelector('.tab-navigation').getBoundingClientRect();
-    tabIndicator.style.width = `${tabRect.width}px`;
-    tabIndicator.style.left = `${tabRect.left - navRect.left}px`;
+    
+    // 添加缓冲动画效果
+    tabIndicator.style.width = `${tabRect.width * 0.6}px`;
+    tabIndicator.style.left = `${tabRect.left - navRect.left + (tabRect.width * 0.2)}px`;
   };
 
   document.querySelectorAll('.tab-item').forEach(tab => {
@@ -239,4 +263,17 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     document.querySelector('.page-transition-wrapper').classList.add('page-transition-enter-active');
   }, 100);
+  
+  // Fluent焦点效果
+  const searchInput = document.querySelector('.search-input');
+  searchInput.addEventListener('focus', () => {
+    document.querySelector('.search-wrapper').style.boxShadow = 
+      document.documentElement.getAttribute('data-theme') === 'dark' 
+        ? 'var(--shadow-focus-dark)' 
+        : 'var(--shadow-focus)';
+  });
+  
+  searchInput.addEventListener('blur', () => {
+    document.querySelector('.search-wrapper').style.boxShadow = '';
+  });
 });
