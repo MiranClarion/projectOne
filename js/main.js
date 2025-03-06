@@ -1,81 +1,196 @@
-// 获取页面上的DOM元素：标签页和信息展示区域
+// 获取DOM元素
 const tabItems = document.querySelectorAll('.tab-item');
-const infoSection = document.querySelector('.info-section');
+const studentInfo = document.querySelector('.student-info');
+const searchInput = document.querySelector('.search-input');
+const searchClear = document.querySelector('.search-clear');
 
-// 定义学生基本信息对象
-const studentInfo = {
-    sno: '3232508202',  // 学号
-    name: '王熠亮'      // 姓名
+// 学生信息数据
+const studentData = {
+    sno: '3232508202',
+    name: '王熠亮',
+    department: '计算机科学与技术',
+    grade: '大三',
+    courses: [
+        { name: '数据结构', score: 92 },
+        { name: '计算机网络', score: 88 },
+        { name: 'Web前端开发', score: 95 }
+    ]
 };
 
-// 更新内容区域的函数
-// @param tabIndex: 当前选中的标签页索引
+// 更新内容区域显示
 function updateContent(tabIndex) {
-    let content = '';
+    // 清空当前内容，准备添加新内容
+    studentInfo.innerHTML = '';
     
-    // 根据不同的标签页索引显示不同的内容
-    switch(tabIndex) {
-        case 0: // 首页：显示学生基本信息
-            content = `
-                <div class="info-item">
-                    <span class="label">学号：</span>
-                    <span class="value">${studentInfo.sno}</span>
-                </div>
-                <div class="info-item">
-                    <span class="label">姓名：</span>
-                    <span class="value">${studentInfo.name}</span>
-                </div>
-            `;
-            break;
-        case 1: // 消息页面：显示消息提醒
-            content = `
-                <div class="info-item">
-                    <span class="label">消息提醒</span>
-                    <span class="value">暂无新消息</span>
-                </div>
-            `;
-            break;
-        case 2: // 购物车页面：显示购物车信息
-            content = `
-                <div class="info-item">
-                    <span class="label">购物车</span>
-                    <span class="value">暂无商品</span>
-                </div>
-                <div class="info-item">
-                    <span class="label">总计</span>
-                    <span class="value">¥0.00</span>
-                </div>
-            `;
-            break;
-        case 3: // 个人页面：显示详细个人信息
-            content = `
-                <div class="info-item">
-                    <span class="label">个人信息</span>
-                    <span class="value">${studentInfo.name}</span>
-                </div>
-                <div class="info-item">
-                    <span class="label">学号</span>
-                    <span class="value">${studentInfo.sno}</span>
-                </div>
-            `;
-            break;
-    }
-    
-    // 将生成的内容更新到页面
-    infoSection.innerHTML = content;
+    // 延迟一小段时间再添加内容，创建过渡效果
+    setTimeout(() => {
+        let content = '';
+        
+        switch(tabIndex) {
+            case 0: // 首页
+                content = `
+                    <h3 class="card-title">学生基本信息</h3>
+                    <div class="info-item">
+                        <span class="label">学号</span>
+                        <span class="value">${studentData.sno}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">姓名</span>
+                        <span class="value">${studentData.name}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">院系</span>
+                        <span class="value">${studentData.department}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">年级</span>
+                        <span class="value">${studentData.grade}</span>
+                    </div>
+                `;
+                break;
+                
+            case 1: // 消息页面
+                content = `
+                    <h3 class="card-title">消息中心</h3>
+                    <div class="info-item">
+                        <span class="label">系统通知</span>
+                        <span class="value">您有一条新的系统通知</span>
+                    </div>
+                    <div class="message-preview">
+                        <div class="message-icon"><i class="ri-notification-4-line"></i></div>
+                        <div class="message-content">
+                            <div class="message-title">选课通知</div>
+                            <div class="message-text">下周一开始新学期选课，请及时登录教务系统</div>
+                            <div class="message-time">今天 10:30</div>
+                        </div>
+                    </div>
+                `;
+                break;
+                
+            case 2: // 购物车
+                content = `
+                    <h3 class="card-title">购物车</h3>
+                    <div class="empty-state">
+                        <i class="ri-shopping-cart-line"></i>
+                        <p>购物车还是空的</p>
+                        <button class="btn-primary">去选购</button>
+                    </div>
+                `;
+                break;
+                
+            case 3: // 个人页面
+                content = `
+                    <div class="profile-header">
+                        <div class="avatar">
+                            <span>${studentData.name.charAt(0)}</span>
+                        </div>
+                        <h2>${studentData.name}</h2>
+                        <p>${studentData.department} · ${studentData.grade}</p>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">学号</span>
+                        <span class="value">${studentData.sno}</span>
+                    </div>
+                    <h3 class="section-title">课程成绩</h3>
+                    <div class="course-list">
+                        ${studentData.courses.map(course => `
+                            <div class="course-item">
+                                <div class="course-name">${course.name}</div>
+                                <div class="course-score">${course.score}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                break;
+        }
+        
+        studentInfo.innerHTML = content;
+        
+        // 添加内容后触发动画
+        const infoItems = studentInfo.querySelectorAll('.info-item');
+        infoItems.forEach((item, i) => {
+            item.style.animationDelay = `${i * 0.1}s`;
+        });
+    }, 50);
 }
 
-// 为每个标签页添加点击事件监听器
-tabItems.forEach((item, index) => {
-    item.addEventListener('click', () => {
-        // 移除所有标签页的active类
+// 标签切换事件处理
+tabItems.forEach(item => {
+    item.addEventListener('click', function() {
+        const tabIndex = parseInt(this.getAttribute('data-tab'));
+        
+        // 更新标签状态
         tabItems.forEach(tab => tab.classList.remove('active'));
-        // 为当前点击的标签页添加active类
-        item.classList.add('active');
-        // 更新内容区域显示
-        updateContent(index);
+        this.classList.add('active');
+        
+        // 更新内容
+        updateContent(tabIndex);
+        
+        // 添加轻微震动反馈（如果设备支持）
+        if (navigator.vibrate) {
+            navigator.vibrate(10);
+        }
     });
 });
 
-// 初始化页面时显示首页内容
+// 搜索框处理
+searchInput.addEventListener('input', function() {
+    if (this.value) {
+        searchClear.style.opacity = '1';
+    } else {
+        searchClear.style.opacity = '0';
+    }
+});
+
+searchClear.addEventListener('click', function() {
+    searchInput.value = '';
+    searchInput.focus();
+    this.style.opacity = '0';
+});
+
+// 初始化显示首页内容
 updateContent(0);
+
+document.addEventListener('DOMContentLoaded', () => {
+  const themeToggle = document.getElementById('theme-toggle');
+  themeToggle.addEventListener('change', () => {
+    document.body.classList.toggle('dark-theme');
+  });
+
+  const tabIndicator = document.querySelector('.tab-indicator');
+  const updateIndicator = (activeTab) => {
+    const tabRect = activeTab.getBoundingClientRect();
+    const navRect = document.querySelector('.tab-navigation').getBoundingClientRect();
+    tabIndicator.style.width = `${tabRect.width}px`;
+    tabIndicator.style.left = `${tabRect.left - navRect.left}px`;
+  };
+
+  document.querySelectorAll('.tab-item').forEach(tab => {
+    tab.addEventListener('click', function(e) {
+      const ripple = document.createElement('span');
+      ripple.classList.add('ripple-effect');
+      const rect = this.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      ripple.style.width = ripple.style.height = `${size}px`;
+      ripple.style.left = `${e.clientX - rect.left - size/2}px`;
+      ripple.style.top = `${e.clientY - rect.top - size/2}px`;
+      this.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 600);
+      updateIndicator(this);
+    });
+  });
+
+  updateIndicator(document.querySelector('.tab-item.active'));
+
+  let lastScrollPosition = 0;
+  const header = document.querySelector('.search-container');
+  document.querySelector('.content-scroll').addEventListener('scroll', () => {
+    const currentScroll = document.querySelector('.content-scroll').scrollTop;
+    if (currentScroll > lastScrollPosition && currentScroll > 50) {
+      header.classList.add('header-hidden');
+    } else {
+      header.classList.remove('header-hidden');
+    }
+    lastScrollPosition = currentScroll;
+  });
+});
