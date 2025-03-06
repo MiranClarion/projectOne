@@ -6,14 +6,14 @@ const searchClear = document.querySelector('.search-clear');
 
 // 学生信息数据
 const studentData = {
-    sno: '3232508202',
-    name: '王熠亮',
+    sno: '3232508210',
+    name: '欧章磊',
     department: '计算机科学与技术',
-    grade: '大三',
+    grade: '大2',
     courses: [
-        { name: '数据结构', score: 92 },
-        { name: '计算机网络', score: 88 },
-        { name: 'Web前端开发', score: 95 }
+        { name: 'web开发', score: 92 },
+        { name: '线性代数', score: 88 },
+        { name: '母猪的产后护理', score: 95 }
     ]
 };
 
@@ -152,9 +152,42 @@ searchClear.addEventListener('click', function() {
 updateContent(0);
 
 document.addEventListener('DOMContentLoaded', () => {
+  // 检查系统主题首选项
+  const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+  
+  // 检查用户之前设置的主题偏好
+  const currentTheme = localStorage.getItem('theme');
+  
+  // 根据本地存储或系统偏好设置当前主题
+  if (currentTheme) {
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    if (currentTheme === 'dark') {
+      document.getElementById('theme-toggle').checked = true;
+    }
+  } else if (prefersDarkScheme.matches) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('theme-toggle').checked = true;
+  }
+  
+  // 主题切换处理
   const themeToggle = document.getElementById('theme-toggle');
+  
   themeToggle.addEventListener('change', () => {
-    document.body.classList.toggle('dark-theme');
+    // 添加过渡类以实现平滑主题切换
+    document.body.classList.add('theme-transition');
+    
+    if (themeToggle.checked) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'light');
+      localStorage.setItem('theme', 'light');
+    }
+    
+    // 触觉反馈
+    if (navigator.vibrate) {
+      navigator.vibrate(10);
+    }
   });
 
   const tabIndicator = document.querySelector('.tab-indicator');
@@ -193,4 +226,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     lastScrollPosition = currentScroll;
   });
+
+  // 使用页面加载效果
+  setTimeout(() => {
+    document.querySelector('.page-transition-wrapper').classList.add('page-transition-enter-active');
+  }, 100);
 });
