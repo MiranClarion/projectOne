@@ -8,7 +8,7 @@ const searchClear = document.querySelector('.search-clear');
 const studentData = {
     sno: '3232508210',
     name: '欧章磊',
-    department: '计算机科学与技术',
+    department: '计算机与大数据学院',
     grade: '大2',
     courses: [
         { name: 'web开发', score: 92 },
@@ -169,25 +169,33 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('theme-toggle').checked = true;
   }
   
-  // 主题切换处理
+  // 主题切换处理 - 添加淡入淡出动画
   const themeToggle = document.getElementById('theme-toggle');
   
   themeToggle.addEventListener('change', () => {
     // 添加过渡类以实现平滑主题切换
     document.body.classList.add('theme-transition');
     
-    if (themeToggle.checked) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.setAttribute('data-theme', 'light');
-      localStorage.setItem('theme', 'light');
-    }
+    // 添加淡入淡出效果
+    document.body.style.opacity = '0.92';
     
-    // 触觉反馈
-    if (navigator.vibrate) {
-      navigator.vibrate(10);
-    }
+    setTimeout(() => {
+      if (themeToggle.checked) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+      }
+      
+      // 触觉反馈
+      if (navigator.vibrate) {
+        navigator.vibrate(10);
+      }
+      
+      // 恢复透明度
+      document.body.style.opacity = '1';
+    }, 50);
   });
 
   const tabIndicator = document.querySelector('.tab-indicator');
