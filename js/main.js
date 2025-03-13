@@ -1,8 +1,9 @@
-// 获取DOM元素
 const tabItems = document.querySelectorAll('.tab-item');
 const studentInfo = document.querySelector('.student-info');
 const searchInput = document.querySelector('.search-input');
 const searchClear = document.querySelector('.search-clear');
+const searchFilters = document.querySelector('.search-filters');
+const searchHistory = document.querySelector('.search-history');
 
 // 学生信息数据
 const studentData = {
@@ -147,6 +148,49 @@ searchClear.addEventListener('click', function() {
     searchInput.focus();
     this.style.opacity = '0';
 });
+
+// 自动完成建议
+searchInput.addEventListener('input', function() {
+    const query = this.value.toLowerCase();
+    const suggestions = studentData.courses.filter(course => course.name.toLowerCase().includes(query));
+    // 显示建议
+    // Pseudo-code: displaySuggestions(suggestions);
+});
+
+// 搜索过滤器
+function updateSearchFilters() {
+    // Pseudo-code: dynamically update search filters based on available data
+}
+
+// 搜索历史
+function updateSearchHistory(query) {
+    // Pseudo-code: save and display search history
+}
+
+// 高级搜索选项
+function advancedSearch(query) {
+    // Pseudo-code: implement advanced search options
+}
+
+// 搜索词高亮
+function highlightSearchTerms(results, query) {
+    // Pseudo-code: highlight search terms in results
+}
+
+// 错误处理
+function handleSearchError(error) {
+    // Pseudo-code: display error message
+}
+
+// 语音搜索
+function startVoiceSearch() {
+    // Pseudo-code: implement voice search functionality
+}
+
+// 搜索结果分页
+function paginateSearchResults(results, page) {
+    // Pseudo-code: implement pagination for search results
+}
 
 // 初始化显示首页内容
 updateContent(0);
